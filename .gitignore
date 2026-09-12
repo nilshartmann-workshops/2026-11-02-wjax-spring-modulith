@@ -1,0 +1,14 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Die H2-Datenbank der Anwendung
+data/
+
+# Einstellungen, die Spring Boot zusätzlich aus dem Arbeitsverzeichnis liest
+# und die nur auf einem Rechner gelten (etwa das Profil "postgres")
+/config/

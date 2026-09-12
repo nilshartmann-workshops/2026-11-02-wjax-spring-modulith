@@ -1,0 +1,28 @@
+name: wjax-plantify
+
+# Kafka und Zipkin brauchen wir nur für die Vorführungen, Postgres nur mit
+# dem Profil "postgres". Die Anwendung startet keinen der Container selbst,
+# denn spring.docker.compose.enabled steht auf false.
+#
+# Postgres starten:        docker compose up -d postgres
+# Postgres zurücksetzen:  ./restart-docker.sh
+services:
+  postgres:
+    container_name: wjax-plantify-postgres
+    image: postgres:18
+    environment:
+      POSTGRES_DB: plantify
+      POSTGRES_USER: plantify
+      POSTGRES_PASSWORD: plantify
+    ports:
+      - "5432:5432"
+  kafka:
+    container_name: wjax-plantify-kafka
+    image: apache/kafka-native:4.1.1
+    ports:
+      - "9092:9092"
+  zipkin:
+    container_name: wjax-plantify-zipkin
+    image: openzipkin/zipkin:3
+    ports:
+      - "9411:9411"
