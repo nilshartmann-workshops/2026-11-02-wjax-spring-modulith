@@ -3,9 +3,8 @@ package nh.demo.plantify.billing;
 import nh.demo.plantify.plant.PlantRegisteredEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.event.EventListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,8 +19,7 @@ public class UsageTracker {
         this.usageRepository = usageRepository;
     }
 
-    @EventListener
-    @Transactional
+    @ApplicationModuleListener
     void onPlantRegistered(PlantRegisteredEvent event) {
         registerSetupFee(event.plantId(), event.ownerId());
     }

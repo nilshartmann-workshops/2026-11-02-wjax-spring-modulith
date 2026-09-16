@@ -7,9 +7,8 @@ import nh.demo.plantify.plant.PlantType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -29,9 +28,11 @@ public class CareService {
         this.careSuggestionService = careSuggestionService;
     }
 
-    // 🕵️‍♂️ Erzählen: synchron, im selben Thread und in derselben Transaktion wie registerPlant
-    @EventListener
-    @Transactional
+    // 🕵️‍♂️ Zeigen: erst @Async dazu, der Listener läuft in einem eigenen Thread
+    // 🕵️‍♂️ Zeigen: dann @TransactionalEventListener mit REQUIRES_NEW, erst nach dem Commit von registerPlant
+    // 🕵️‍♂️ Erzählen: @ApplicationModuleListener fasst die drei Annotationen zusammen
+    // 🕵️‍♂️ Fallstrick: nur @Async, und registerPlant scheitert danach, dann bleiben die Care-Tasks trotzdem gespeichert
+    @ApplicationModuleListener
     void onPlantRegistered(PlantRegisteredEvent event) {
         setupInitialCareTasks(event.plantId(), event.plantType(), event.location());
     }
