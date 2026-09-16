@@ -5,7 +5,8 @@ import nh.demo.plantify.owner.OwnerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.event.EventListener;
+import org.springframework.modulith.moments.MonthHasPassed;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,19 +33,15 @@ class InvoiceGenerator {
         this.ownerRepository = ownerRepository;
     }
 
-    // 🤔 Warum genau dieser Ausdruck? Kein "fachlicher" Zeitraum
-    // 🤔 Wie würden wir das testen (manuell oder automatisch)?
-    @Scheduled(cron = "0 0 2 1 * *")
+    // 🕵️‍♂️ Erzählen: "ein Monat ist um" ist fachlich, "0 0 2 1 * *" ist es nicht
+    // 🕵️‍♂️ Erzählen: Moments veröffentlicht das Event, und im Test spult die TimeMachine die Zeit vor
+    @EventListener
     @Transactional
-    void generateInvoicesForPreviousMonth() {
-        YearMonth previousMonth = YearMonth
-            .now(clockProvider.getIfAvailable(Clock::systemDefaultZone))
-            .minusMonths(1);
-
-        log.info("🗓️ Rechnungslauf (Cron) für {}", previousMonth);
+    void generateInvoices(MonthHasPassed event) {
+        log.info("🗓️ Month has passed. Generating invoices for: {}", event.getMonth());
 
         generateInvoicesForMonth(
-            previousMonth,
+            event.getMonth(),
             invoiceRepository::save
         );
     }
