@@ -94,6 +94,11 @@
             <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-starter-jdbc</artifactId>
         </dependency>
+        <!-- 🕵️‍♂️ Erzählen: die Starter bringen events-core nur zur Laufzeit mit, EventPublicationRepository ist kein öffentliches API -->
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-events-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-events-kafka</artifactId>
