@@ -1,9 +1,8 @@
 package nh.demo.plantify.plant;
 
-import nh.demo.plantify.billing.UsageTracker;
-import nh.demo.plantify.care.CareService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +15,11 @@ class PlantService {
     private static final Logger log = LoggerFactory.getLogger(PlantService.class);
 
     private final PlantRepository plantRepository;
-    private final CareService careService;
-    private final UsageTracker usageTracker;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    PlantService(PlantRepository plantRepository, CareService careService, UsageTracker usageTracker) {
+    PlantService(PlantRepository plantRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.plantRepository = plantRepository;
-        this.careService = careService;
-        this.usageTracker = usageTracker;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -32,18 +29,15 @@ class PlantService {
         var plant = new Plant(ownerId, name, plantType, location);
         plantRepository.save(plant);
 
-        // Care-Tasks anlegen
-        careService.setupInitialCareTasks(
+        // 🕵️‍♂️ Erzählen: plant kennt weder care noch billing, die Listener melden sich selbst an
+        // 🕵️‍♂️ Zeigen: IntelliJ springt vom publishEvent zu den Listenern
+        applicationEventPublisher.publishEvent(new PlantRegisteredEvent(
             plant.getId(),
+            plant.getOwnerId(),
+            plant.getName(),
             plant.getPlantType(),
             plant.getLocation()
-        );
-
-        // Einrichtungsgebühr berechnen
-        usageTracker.registerSetupFee(
-            plant.getId(),
-            plant.getOwnerId()
-        );
+        ));
 
         log.info("""
             

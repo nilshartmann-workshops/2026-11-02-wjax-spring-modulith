@@ -2,10 +2,12 @@ package nh.demo.plantify.care;
 
 import nh.demo.plantify.care.suggestions.CareSuggestion;
 import nh.demo.plantify.care.suggestions.CareSuggestionService;
+import nh.demo.plantify.plant.PlantRegisteredEvent;
 import nh.demo.plantify.plant.PlantType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +29,14 @@ public class CareService {
         this.careSuggestionService = careSuggestionService;
     }
 
+    // 🕵️‍♂️ Erzählen: synchron, im selben Thread und in derselben Transaktion wie registerPlant
+    @EventListener
     @Transactional
-    public void setupInitialCareTasks(UUID plantId, PlantType plantType, String location) {
+    void onPlantRegistered(PlantRegisteredEvent event) {
+        setupInitialCareTasks(event.plantId(), event.plantType(), event.location());
+    }
+
+    private void setupInitialCareTasks(UUID plantId, PlantType plantType, String location) {
         var suggestionsForPlant = careSuggestionService.getBestSuggestionsByPlantType(
             plantType,
             location

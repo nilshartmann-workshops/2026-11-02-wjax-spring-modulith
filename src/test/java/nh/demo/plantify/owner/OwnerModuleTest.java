@@ -10,8 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// 🕵️‍♂️ Erzählen: der Modultest prüft vorher die ganze Architektur, und der bekannte Zyklus besteht noch
-@ApplicationModuleTest(verifyAutomatically = false)
+// 🕵️‍♂️ Erzählen: der Zyklus ist weg, und mit ihm der Schalter
+@ApplicationModuleTest
 @ActiveProfiles("test")
 class OwnerModuleTest {
 
