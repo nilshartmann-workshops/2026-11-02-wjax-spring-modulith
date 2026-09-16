@@ -1,23 +1,16 @@
 package nh.demo.plantify.rose;
 
-import nh.demo.plantify.care.CareSuggestion;
-import nh.demo.plantify.care.CareSuggestionFactory;
-import nh.demo.plantify.owner.OwnerRepository;
+import nh.demo.plantify.care.suggestions.CareSuggestion;
+import nh.demo.plantify.care.suggestions.CareSuggestionFactory;
 import nh.demo.plantify.plant.PlantType;
 import nh.demo.plantify.shared.CareTaskType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+// 🕵️‍♂️ Zeigen: hier stand das OwnerRepository, und die erlaubten Abhängigkeiten haben es verboten
 @Component
 class RoseCareSuggestionFactory implements CareSuggestionFactory {
-
-    // 🕵️‍♂️ Zeigen: OwnerRepository ist API von owner, der Architekturtest bleibt grün
-    private final OwnerRepository ownerRepository;
-
-    RoseCareSuggestionFactory(OwnerRepository ownerRepository) {
-        this.ownerRepository = ownerRepository;
-    }
 
     @Override
     public List<CareSuggestion> createSuggestion(PlantType plantType, String location) {
