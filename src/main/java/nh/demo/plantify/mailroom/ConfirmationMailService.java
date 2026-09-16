@@ -23,5 +23,11 @@ class ConfirmationMailService {
             📧
             
             """, event.name());
+
+        // 🕵️‍♂️ Zeigen: einkommentieren, Pflanze anlegen, plants, care_tasks und usage_records gefüllt
+        // 🕵️‍♂️ Zeigen: event_publication, je Listener ein Eintrag, zwei COMPLETED und einer FAILED
+        // 🕵️‍♂️ Zeigen: auskommentieren und neu starten, nur die Poststelle läuft noch einmal
+        // 🕵️‍♂️ Fallstrick: die 📧-Zeile steht danach zweimal im Log, die Mail geht at-least-once hinaus
+        // if (true) { throw new IllegalStateException("No delivery receipt from mail server"); }
     }
 }
