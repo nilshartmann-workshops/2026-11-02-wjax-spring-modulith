@@ -4,6 +4,7 @@ import nh.demo.plantify.plant.PlantRegisteredEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,11 @@ class ConfirmationMailService {
     private static final Logger log = LoggerFactory.getLogger(ConfirmationMailService.class);
 
     private final Duration delay;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    ConfirmationMailService(@Value("${plantify.mail.delay:0s}") Duration delay) {
+    ConfirmationMailService(@Value("${plantify.mail.delay:0s}") Duration delay, ApplicationEventPublisher applicationEventPublisher) {
         this.delay = delay;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @ApplicationModuleListener
@@ -45,5 +48,8 @@ class ConfirmationMailService {
         // 🕵️‍♂️ Zeigen: auskommentieren und neu starten, nur die Poststelle läuft noch einmal
         // 🕵️‍♂️ Fallstrick: die 📧-Zeile steht danach zweimal im Log, die Mail geht at-least-once hinaus
         // if (true) { throw new IllegalStateException("No delivery receipt from mail server"); }
+
+        // 🕵️‍♂️ Erzählen: verschickt wird außerhalb des Modulith, die Poststelle übergibt die Mail als Event
+        applicationEventPublisher.publishEvent(new MailRequestedEvent(event.plantId(), event.name()));
     }
 }
