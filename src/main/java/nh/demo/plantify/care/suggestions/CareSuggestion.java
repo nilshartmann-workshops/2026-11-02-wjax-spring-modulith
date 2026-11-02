@@ -1,9 +1,11 @@
-package nh.demo.plantify.care;
+package nh.demo.plantify.care.suggestions;
 
 import nh.demo.plantify.shared.CareTaskType;
+import org.springframework.modulith.NamedInterface;
 
 import java.time.LocalDate;
 
+@NamedInterface(name = "Suggestions")
 public sealed interface CareSuggestion
     permits CareSuggestion.OneTimeCareSuggestion, CareSuggestion.RecurringCareSuggestion {
 
