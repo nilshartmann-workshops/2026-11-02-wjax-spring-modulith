@@ -5,6 +5,8 @@ import nh.demo.plantify.owner.OwnerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.event.EventListener;
+import org.springframework.modulith.moments.MonthHasPassed;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +36,11 @@ class InvoiceGenerator {
 
     // 🤔 Warum genau dieser Ausdruck? Kein "fachlicher" Zeitraum
     // 🤔 Wie würden wir das testen (manuell oder automatisch)?
-    @Scheduled(cron = "0 0 2 1 * *")
+//    @Scheduled(cron = "0 0 2 1 * *")
+    // Moments API
+    @EventListener
     @Transactional
-    void generateInvoicesForPreviousMonth() {
+    void generateInvoicesForPreviousMonth(MonthHasPassed monthHasPassed) {
         YearMonth previousMonth = YearMonth
             .now(clockProvider.getIfAvailable(Clock::systemDefaultZone))
             .minusMonths(1);

@@ -21,7 +21,7 @@ class PlantifyModuleTest {
         var modules = ApplicationModules.of(PlantifyApplication.class);
 
         modules.detectViolations()
-            .filter(Predicate.not(this::isPlantCareCycle))
+//            .filter(Predicate.not(this::isPlantCareCycle))
             .throwIfPresent();
     }
 
